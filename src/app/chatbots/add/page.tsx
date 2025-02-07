@@ -17,11 +17,11 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 const ChatBotAdminPanel = () => {
-  const [projectName, setProjectName] = useState("");
+  const [name, setName] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [borderColor, setBorderColor] = useState("#6366f1");
   const [backColor, setBackColor] = useState("#ffffff");
-  const [defaultMsg, setDefaultMsg] = useState("");
+  const [starterMessage, setStarterMessage] = useState("");
   const [document, setDocument] = useState<any>(null);
   const [logo, setLogo] = useState<any>(null);
   const [link, setLink] = useState("");
@@ -35,55 +35,56 @@ const ChatBotAdminPanel = () => {
   const router = useRouter();
 
   const GenerateChatBot = async () => {
-    if (!projectName.trim()) {
-      toast({ title: "Please enter a project name" });
+    if (!name.trim()) {
+      toast({ title: "Please enter a name", variant: "destructive" });
       return;
     }
 
     if (!apiKey.trim()) {
-      toast({ title: "Please enter your OpenAI API key" });
+      toast({
+        title: "Please enter your OpenAI API key",
+        variant: "destructive",
+      });
       return;
     }
 
     if (!document) {
-      toast({ title: "Please select a knowledge base file" });
+      toast({
+        title: "Please select a knowledge base file",
+        variant: "destructive",
+      });
       return;
     }
 
     if (!logo) {
-      toast({ title: "Please select a bot logo" });
+      toast({ title: "Please select a bot logo", variant: "destructive" });
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", document);
-    formData.append("project_name", projectName);
-    formData.append("openai_key", apiKey);
+    formData.append("name", name);
+    formData.append("knowledge", knowledgeBase);
+    formData.append("starterMessage", starterMessage);
+    formData.append("openAiApiKey", apiKey);
+    formData.append("botLogo", logo);
     formData.append(
-      "published_link",
-      "https://chatbot.aurealone.com/" +
-        projectName.toLowerCase().replaceAll(" ", "-")
-    );
-    formData.append(
-      "color_theme",
+      "themeConfig",
       JSON.stringify({
         borderColor: borderColor,
         backgroundColor: backColor,
       })
     );
-    formData.append("default_msg", defaultMsg);
-    formData.append("bot_logo", logo);
 
     try {
       setIsLoading(true);
-      const response = await fetch("/api/chatbots", {
+      const response = await fetch("/api/chatbot", {
         method: "POST",
         body: formData,
       });
 
       if (response.ok) {
         const data = await response.json();
-        setLink(`${window.location.origin}/chatbot/${data.id}`);
+        setLink(`${window.location.origin}/chatbot/${data.chatbot.id}`);
         toast({ title: "Chatbot generated successfully" });
       } else {
         toast({ title: "Failed to generate chatbot" });
@@ -126,7 +127,7 @@ const ChatBotAdminPanel = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 mb-24">
       <div className="max-w-[90%] mx-auto">
         <div className="flex flex-row justify-between mb-6">
           <div
@@ -153,8 +154,8 @@ const ChatBotAdminPanel = () => {
               <input
                 type="text"
                 className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Enter project name"
               />
             </div>
@@ -289,8 +290,8 @@ const ChatBotAdminPanel = () => {
               <textarea
                 className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 rows={4}
-                value={defaultMsg}
-                onChange={(e) => setDefaultMsg(e.target.value)}
+                value={starterMessage}
+                onChange={(e) => setStarterMessage(e.target.value)}
                 placeholder="Hello! How can I assist you today?"
               />
             </div>
