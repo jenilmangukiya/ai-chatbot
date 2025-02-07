@@ -146,7 +146,10 @@ export default function ChatbotList() {
                 </div>
               </div>
               <div className="flex flex-row space-x-2">
-                <Button className="bg-blue-500 text-white">
+                <Button
+                  className="bg-blue-500 text-white"
+                  onClick={() => router.push(`/chatbots/${bot.id}`)}
+                >
                   <Edit /> Edit
                 </Button>
                 <Button className="bg-red-600 color-white">Delete</Button>

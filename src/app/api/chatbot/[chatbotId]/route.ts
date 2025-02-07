@@ -66,6 +66,15 @@ export async function PATCH(
     const botLogo = formData.get("botLogo") as string;
     const themeConfig = formData.get("themeConfig");
 
+    console.log({
+      name,
+      knowledge,
+      starterMessage,
+      openAiApiKey,
+      botLogo,
+      themeConfig,
+    });
+
     let parsedThemeConfig = {};
     if (typeof themeConfig === "string") {
       try {
