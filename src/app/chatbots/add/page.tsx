@@ -76,13 +76,10 @@ const ChatBotAdminPanel = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(
-        "https://chatbot-dashboard.aurealone.com/api/chatbots",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("/api/chatbots", {
+        method: "POST",
+        body: formData,
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -96,6 +93,29 @@ const ChatBotAdminPanel = () => {
       toast({ title: "Failed to generate chatbot", variant: "destructive" });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const extractText = async () => {
+    if (!document) return;
+    try {
+      const formData = new FormData();
+      formData.append("file", document);
+      const response = await fetch("/api/chatbot/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setKnowledgeBase(data.textContent);
+        toast({ title: "Knowladge extracted successfully" });
+      } else {
+        toast({ title: "Failed Extract the text", variant: "destructive" });
+      }
+    } catch (err) {
+      console.error("Failed Extract the text: ", err);
+      toast({ title: "Failed Extract the text", variant: "destructive" });
     }
   };
 
@@ -194,7 +214,7 @@ const ChatBotAdminPanel = () => {
                   ref={inputDocumentFile}
                   className="hidden"
                   onChange={(e) => setDocument(e.target.files?.[0])}
-                  accept=".txt,.json,.yaml"
+                  accept=".txt,.json,.yaml,.pdf"
                 />
                 <p className="text-sm text-gray-600 mb-2">
                   {document
@@ -205,7 +225,13 @@ const ChatBotAdminPanel = () => {
                   Limit 200MB per file. TXT, JSON, YAML
                 </p>
               </div>
-              <Button className="w-full">Extract text</Button>
+              <Button
+                className="w-full"
+                onClick={extractText}
+                disabled={!document}
+              >
+                Extract text
+              </Button>
             </div>
           </div>
           <div className="space-y-4 grid-cols-2 w-full">

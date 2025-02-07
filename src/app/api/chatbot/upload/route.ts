@@ -11,7 +11,7 @@ export const POST = async (req: Request) => {
 
     const textContent = await parsePdf(file);
 
-    return new Response((textContent || "") as string);
+    return Response.json({ textContent });
   } catch (error: any) {
     return Response.json({ error: error?.message }, { status: 500 });
   }
