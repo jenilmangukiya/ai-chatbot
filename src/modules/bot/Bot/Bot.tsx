@@ -6,40 +6,10 @@ import { ChatbotConfig, Message } from "./types";
 import { ChatMessage } from "./ChatMessage";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "@/hooks/use-toast";
-import Image from "next/image";
 
 interface ChatbotProps {
   chatbotId: string;
 }
-
-// Mock data for development
-const MOCK_CONFIG: ChatbotConfig = {
-  id: "cde227ba-2134-4620-9a3d-7d23d0260bb6",
-  name: "Customer Service Bot",
-  knowledge:
-    "You are a customer service bot. Please provide answers to user questions.",
-  createdAt: "2025-02-07T13:31:31.975Z",
-  updatedAt: "2025-02-07T13:31:31.975Z",
-  themeConfig: {
-    borderColor: "#582cf2",
-    backgroundColor: "#6c8d90",
-  },
-  starterMessage: "👋 Hi! I'm here to help. How can I assist you today?",
-  openAiApiKey: "dummy-key",
-  botLogo:
-    "https://images.unsplash.com/photo-1531379410502-63bfe8cdaf6f?w=64&h=64&fit=crop&crop=faces",
-};
-
-// Mock API response
-const mockApiResponse = (message: string) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        response: `This is a mock response to: "${message}". In production, this would be replaced with actual API responses.`,
-      });
-    }, 1000);
-  });
-};
 
 export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,8 +88,24 @@ export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
     setIsLoading(true);
 
     try {
-      // Using mock API response instead of actual API call
-      const data = await mockApiResponse(inputMessage);
+      // Convert existing messages to API format
+      const formattedMessages = [
+        { role: "system", content: config.knowledge }, // System prompt from config
+        ...messages.map((msg) => ({
+          role: msg.isBot ? "assistant" : "user",
+          content: msg.content,
+        })),
+        { role: "user", content: inputMessage }, // Add new user message
+      ];
+
+      // Call the API
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: formattedMessages }),
+      });
+
+      const data = await response.json();
 
       const botMessage: Message = {
         id: uuidv4(),
@@ -217,7 +203,6 @@ export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
                 placeholder="Type your message..."
                 className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2"
                 style={{
-                  focusRing: config.themeConfig.borderColor,
                   borderColor: config.themeConfig.borderColor,
                 }}
                 disabled={isLoading}
