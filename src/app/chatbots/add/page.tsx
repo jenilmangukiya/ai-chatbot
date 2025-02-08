@@ -48,7 +48,7 @@ const ChatBotAdminPanel = () => {
       return;
     }
 
-    if (!document) {
+    if (!knowledgeBase.trim()) {
       toast({
         title: "Please select a knowledge base file",
         variant: "destructive",
@@ -84,7 +84,7 @@ const ChatBotAdminPanel = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setLink(`${window.location.origin}/chatbot/${data.chatbot.id}`);
+        setLink(`${window.location.origin}/bot/${data.chatbot.id}`);
         toast({ title: "Chatbot generated successfully" });
       } else {
         toast({ title: "Failed to generate chatbot" });

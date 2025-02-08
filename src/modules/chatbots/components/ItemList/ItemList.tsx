@@ -9,9 +9,11 @@ import React from "react";
 const ItemList = ({
   bot,
   handleCopyCode,
+  handleDelete,
 }: {
   bot: Chatbot;
   handleCopyCode: (code: string) => void;
+  handleDelete: (id: string) => void;
 }) => {
   const embedCode = `<iframe src="${window.location.origin}/bot/${bot.id}" style="width: 100%; height: 600px; border: none; position: absolute; bottom: 0; z-index: 50;"></iframe>`;
 
@@ -43,7 +45,12 @@ const ItemList = ({
           >
             <Edit /> Edit
           </Button>
-          <Button className="bg-red-600 color-white">Delete</Button>
+          <Button
+            className="bg-red-600 color-white"
+            onClick={() => handleDelete(bot.id)}
+          >
+            Delete
+          </Button>
         </div>
       </CardContent>
     </Card>

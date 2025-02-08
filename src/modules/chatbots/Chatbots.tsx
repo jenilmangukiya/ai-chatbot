@@ -73,6 +73,28 @@ export default function ChatbotList() {
       });
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this chatbot?")) return;
+
+    try {
+      const res = await fetch(`/api/chatbot/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete chatbot");
+      toast({
+        title: "Chatbot deleted successfully",
+      });
+      fetchChatbots();
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        variant: "destructive",
+        title: "Failed to delete chatbot",
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex flex-row justify-between mb-6">
@@ -108,7 +130,12 @@ export default function ChatbotList() {
       {/* Chatbot Cards */}
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6">
         {chatbots.map((bot) => (
-          <ItemList bot={bot} handleCopyCode={handleCopyCode} key={bot.id} />
+          <ItemList
+            bot={bot}
+            handleCopyCode={handleCopyCode}
+            handleDelete={handleDelete}
+            key={bot.id}
+          />
         ))}
       </div>
 
