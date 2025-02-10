@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader/Loader";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -40,7 +41,7 @@ export default function SignInPage() {
   };
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return (

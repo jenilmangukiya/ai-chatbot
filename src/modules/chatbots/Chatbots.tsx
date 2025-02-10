@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import ItemList from "./components/ItemList/ItemList";
 import { Chatbot } from "@prisma/client";
 import Header from "@/components/Header/Header";
+import Loader from "@/components/Loader/Loader";
 
 export default function ChatbotList() {
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
@@ -104,19 +105,20 @@ export default function ChatbotList() {
       </form>
 
       {/* Loading & Error Handling */}
-      {loading && <p>Loading chatbots...</p>}
+      {loading && <Loader className="h-[500px] w-full" />}
       {error && <p className="text-red-500">{error}</p>}
 
       {/* Chatbot Cards */}
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6">
-        {chatbots.map((bot, index) => (
-          <ItemList
-            bot={bot}
-            handleDelete={handleDelete}
-            key={bot.id}
-            index={index}
-          />
-        ))}
+        {!loading &&
+          chatbots.map((bot, index) => (
+            <ItemList
+              bot={bot}
+              handleDelete={handleDelete}
+              key={bot.id}
+              index={index}
+            />
+          ))}
       </div>
 
       {/* Pagination Controls */}

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader/Loader";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   // Optionally, you can display a loader while checking session
   if (status === "loading" || !session) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return <>{children}</>;

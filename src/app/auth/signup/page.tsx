@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import Loader from "@/components/Loader/Loader";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function SignUpPage() {
   };
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return (
