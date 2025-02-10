@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "K-Bot",
+  title: "SmartSage",
   description: "Knowlagable AI bot with custom knowledge base",
 };
 

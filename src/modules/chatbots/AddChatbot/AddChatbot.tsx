@@ -14,7 +14,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import Header from "@/components/Header/Header";
 
 const AddChatbot = () => {
   const [name, setName] = useState("");
@@ -31,8 +31,6 @@ const AddChatbot = () => {
 
   const inputDocumentFile: any = useRef(null);
   const inputLogoFile: any = useRef(null);
-
-  const router = useRouter();
 
   const GenerateChatBot = async () => {
     if (!name.trim()) {
@@ -127,51 +125,44 @@ const AddChatbot = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 mb-24">
-      <div className="max-w-[90%] mx-auto">
-        <div className="flex flex-row justify-between mb-6">
-          <div
-            className={`transition-all duration-1000 ease-out ${"opacity-100 translate-y-0"} flex justify-center items-center gap-2`}
-          >
-            <Bot className="w-12 h-12 mx-auto text-blue-400" />
-            <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-              K-Bot
-            </h1>
-          </div>
-          <Button onClick={() => router.push("/chatbots")}>
-            <ArrowLeft className="w-4 h-4" />
-            Back to dashboard
-          </Button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white mb-24">
+      <div className="container mx-auto p-6">
+        <Header />
 
         <div className="space-y-8 bg-white p-8 rounded-xl shadow-lg">
           {/* Basic Information */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Project Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter project name"
-              />
-            </div>
+          <div>
+            <form autoComplete="off" className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Project Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter project name"
+                  autoComplete="new-password"
+                  name="project-name"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                OpenAI API Key
-              </label>
-              <input
-                type="password"
-                className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your OpenAI API key"
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  OpenAI API Key
+                </label>
+                <input
+                  type="password"
+                  className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="Enter your OpenAI API key"
+                  autoComplete="new-password"
+                  name="api-key"
+                />
+              </div>
+            </form>
           </div>
 
           {/* File Upload Section */}

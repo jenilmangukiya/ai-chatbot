@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  console.log("session", session);
+
   if (!session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
@@ -75,6 +75,11 @@ export async function POST(req: NextRequest) {
 
 // GET: List chatbots with pagination and search
 export async function GET(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(req.url);
 
@@ -93,6 +98,7 @@ export async function GET(req: NextRequest) {
           { name: { contains: search, mode: "insensitive" } }, // Case-insensitive search by name
           { knowledge: { contains: search, mode: "insensitive" } }, // Search in knowledge
         ],
+        user: { email: session.user.email! },
       },
       take: limit,
       skip: skip,
@@ -106,6 +112,7 @@ export async function GET(req: NextRequest) {
           { name: { contains: search, mode: "insensitive" } },
           { knowledge: { contains: search, mode: "insensitive" } },
         ],
+        user: { email: session.user.email! },
       },
     });
 

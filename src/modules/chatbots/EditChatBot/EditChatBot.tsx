@@ -14,7 +14,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import Header from "@/components/Header/Header";
 
 const EditChatBot = ({ chatbotId }: { chatbotId: string }) => {
   const [name, setName] = useState("");
@@ -31,8 +31,6 @@ const EditChatBot = ({ chatbotId }: { chatbotId: string }) => {
 
   const inputDocumentFile: any = useRef(null);
   const inputLogoFile: any = useRef(null);
-
-  const router = useRouter();
 
   // Fetch existing chatbot data when component mounts
   useEffect(() => {
@@ -171,22 +169,9 @@ const EditChatBot = ({ chatbotId }: { chatbotId: string }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 mb-24">
-      <div className="max-w-[90%] mx-auto">
-        <div className="flex flex-row justify-between mb-6">
-          <div
-            className={`transition-all duration-1000 ease-out ${"opacity-100 translate-y-0"} flex justify-center items-center gap-2`}
-          >
-            <Bot className="w-12 h-12 mx-auto text-blue-400" />
-            <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-              K-Bot
-            </h1>
-          </div>
-          <Button onClick={() => router.push("/chatbots")}>
-            <ArrowLeft className="w-4 h-4" />
-            Back to dashboard
-          </Button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white mb-24">
+      <div className="container mx-auto p-6">
+        <Header />
 
         <div className="space-y-8 bg-white p-8 rounded-xl shadow-lg">
           {/* Basic Information */}

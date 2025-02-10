@@ -56,7 +56,7 @@ export default function SignUpPage() {
     }
   };
 
-  if (status === "loading" || !session) {
+  if (status === "loading") {
     return <p>Loading...</p>;
   }
 

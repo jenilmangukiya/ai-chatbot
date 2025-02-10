@@ -39,7 +39,7 @@ export default function SignInPage() {
     }
   };
 
-  if (status === "loading" || !session) {
+  if (status === "loading") {
     return <p>Loading...</p>;
   }
 

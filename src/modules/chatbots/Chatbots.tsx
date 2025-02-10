@@ -12,11 +12,12 @@ import {
   PaginationNext,
   PaginationLink,
 } from "@/components/ui/pagination";
-import { Bot } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import ItemList from "./components/ItemList/ItemList";
 import { Chatbot } from "@prisma/client";
+import Header from "@/components/Header/Header";
 
 export default function ChatbotList() {
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
@@ -79,19 +80,7 @@ export default function ChatbotList() {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex flex-row justify-between mb-6">
-        <div
-          className={`transition-all duration-1000 ease-out ${"opacity-100 translate-y-0"} flex justify-center items-center gap-2`}
-        >
-          <Bot className="w-12 h-12 mx-auto text-blue-400" />
-          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-            K-Bot
-          </h1>
-        </div>
-        <Button onClick={() => router.push("/chatbots/add")}>
-          Add new Bot
-        </Button>
-      </div>
+      <Header />
 
       {/* Search Bar */}
       <form onSubmit={handleSearch} className="flex space-x-2 mb-6">
@@ -102,7 +91,16 @@ export default function ChatbotList() {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full"
         />
-        <Button type="submit">Search</Button>
+        <Button type="submit" className="font-bold">
+          Search
+        </Button>
+        <Button
+          onClick={() => router.push("/chatbots/add")}
+          className="bg-green-500 hover:bg-green-600 text-white font-bold"
+        >
+          <Plus />
+          Add new bot
+        </Button>
       </form>
 
       {/* Loading & Error Handling */}
