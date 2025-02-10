@@ -1,3 +1,4 @@
+import ProtectedRoute from "@/components/Auth/ProtectedRoute/ProtectedRoute";
 import SoftwareLanding from "@/modules/preview/1/SoftwareLanding/SoftwareLanding";
 
 async function SoftwareLandingPage({
@@ -6,7 +7,11 @@ async function SoftwareLandingPage({
   params: { chatbotId: string };
 }) {
   const { chatbotId } = await params;
-  return <SoftwareLanding chatbotId={chatbotId} />;
+  return (
+    <ProtectedRoute>
+      <SoftwareLanding chatbotId={chatbotId} />
+    </ProtectedRoute>
+  );
 }
 
 export default SoftwareLandingPage;

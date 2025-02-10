@@ -1,3 +1,4 @@
+import ProtectedRoute from "@/components/Auth/ProtectedRoute/ProtectedRoute";
 import RecipySharingApp from "@/modules/preview/2/RecipySharingApp/RecipySharingApp";
 
 async function RecipySharingAppPage({
@@ -6,7 +7,11 @@ async function RecipySharingAppPage({
   params: { chatbotId: string };
 }) {
   const { chatbotId } = await params;
-  return <RecipySharingApp chatbotId={chatbotId} />;
+  return (
+    <ProtectedRoute>
+      <RecipySharingApp chatbotId={chatbotId} />
+    </ProtectedRoute>
+  );
 }
 
 export default RecipySharingAppPage;

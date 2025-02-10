@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -10,6 +12,16 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "loading") return;
+
+    if (session) {
+      router.push("/chatbots");
+    }
+  }, [session, status, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,13 +48,17 @@ export default function SignUpPage() {
         return;
       }
 
-      // On successful sign up, redirect to sign in page.
       router.push("/auth/signin");
     } catch (err) {
+      console.error("Error signing up", err);
       setError("Error creating account");
       setIsLoading(false);
     }
   };
+
+  if (status === "loading" || !session) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">

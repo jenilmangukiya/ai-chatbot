@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-
+  console.log("session", session);
   if (!session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
         openAiApiKey,
         botLogo: "botLogo",
         themeConfig: parsedThemeConfig,
+        user: { connect: { email: session.user.email! } },
       },
     });
 

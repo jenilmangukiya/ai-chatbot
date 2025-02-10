@@ -1,6 +1,11 @@
 "use client";
+import ProtectedRoute from "@/components/Auth/ProtectedRoute/ProtectedRoute";
 import ChatbotList from "@/modules/chatbots/Chatbots";
 
 export default function page() {
-  return <ChatbotList />;
+  return (
+    <ProtectedRoute>
+      <ChatbotList />
+    </ProtectedRoute>
+  );
 }
