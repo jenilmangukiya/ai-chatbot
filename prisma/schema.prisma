@@ -13,14 +13,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String
+  password  String // store hashed passwords
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation: a user can have many chatbots
+  chatbots Chatbot[]
+}
+
 model Chatbot {
-  id             String   @id @default(uuid()) // Unique ID for each chatbot
-  name           String // Chatbot name
-  knowledge      String // Predefined knowledge base (can be a large text field)
-  createdAt      DateTime @default(now()) // Timestamp when chatbot is created
-  updatedAt      DateTime @updatedAt // Auto-updates on modification
-  themeConfig    Json // Theme configuration stored as JSON
-  starterMessage String // Initial greeting message
-  openAiApiKey   String // API key for OpenAI integration
-  botLogo        String? // URL for bot logo image (optional)
+  id             String   @id @default(uuid())
+  name           String
+  knowledge      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  themeConfig    Json
+  starterMessage String
+  openAiApiKey   String
+  botLogo        String?
+
+  // Relation: each chatbot is owned by one user
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }

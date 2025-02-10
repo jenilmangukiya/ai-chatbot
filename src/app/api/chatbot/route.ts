@@ -1,68 +1,75 @@
+import { authOptions } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  // try {
-  const formData = await req.formData();
+  const session = await getServerSession(authOptions);
 
-  // Extract form fields
-  const name = formData.get("name") as string;
-  const knowledge = formData.get("knowledge") as string;
-  const starterMessage = formData.get("starterMessage") as string;
-  const openAiApiKey = formData.get("openAiApiKey") as string;
-  const botLogo = formData.get("botLogo") as string; // Expecting URL
-  const themeConfig = formData.get("themeConfig"); // JSON string
-
-  console.log({
-    name,
-    knowledge,
-    starterMessage,
-    openAiApiKey,
-    botLogo,
-    themeConfig,
-  });
-
-  if (!name || !knowledge || !starterMessage || !openAiApiKey) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
+  try {
+    const formData = await req.formData();
 
-  // Parse themeConfig if it's a stringified JSON
-  let parsedThemeConfig = {};
-  if (typeof themeConfig === "string" && themeConfig) {
-    try {
-      parsedThemeConfig = JSON.parse(themeConfig);
-    } catch (error: any) {
-      console.error("Error while creating chatbot:", error);
-      return NextResponse.json(
-        { error: "Invalid themeConfig JSON" },
-        { status: 400 }
-      );
-    }
-  }
+    // Extract form fields
+    const name = formData.get("name") as string;
+    const knowledge = formData.get("knowledge") as string;
+    const starterMessage = formData.get("starterMessage") as string;
+    const openAiApiKey = formData.get("openAiApiKey") as string;
+    const botLogo = formData.get("botLogo") as string; // Expecting URL
+    const themeConfig = formData.get("themeConfig"); // JSON string
 
-  // Save chatbot to the database
-  const chatbot = await prismaClient.chatbot.create({
-    data: {
+    console.log({
       name,
       knowledge,
       starterMessage,
       openAiApiKey,
-      botLogo: "botLogo" || null,
-      themeConfig: parsedThemeConfig,
-    },
-  });
+      botLogo,
+      themeConfig,
+    });
 
-  return NextResponse.json({ success: true, chatbot }, { status: 201 });
-  // } catch (error) {
-  //   console.error("Error creating chatbot:", error);
-  //   return NextResponse.json(
-  //     { error: "Internal Server Error" },
-  //     { status: 500 }
-  //   );
-  // }
+    if (!name || !knowledge || !starterMessage || !openAiApiKey) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Parse themeConfig if it's a stringified JSON
+    let parsedThemeConfig = {};
+    if (typeof themeConfig === "string" && themeConfig) {
+      try {
+        parsedThemeConfig = JSON.parse(themeConfig);
+      } catch (error: any) {
+        console.error("Error while creating chatbot:", error);
+        return NextResponse.json(
+          { error: "Invalid themeConfig JSON" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Save chatbot to the database
+    const chatbot = await prismaClient.chatbot.create({
+      data: {
+        name,
+        knowledge,
+        starterMessage,
+        openAiApiKey,
+        botLogo: "botLogo",
+        themeConfig: parsedThemeConfig,
+      },
+    });
+
+    return NextResponse.json({ success: true, chatbot }, { status: 201 });
+  } catch (error) {
+    console.error("Error creating chatbot:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
 
 // GET: List chatbots with pagination and search
