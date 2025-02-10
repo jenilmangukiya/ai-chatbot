@@ -317,7 +317,7 @@ const ChatBotAdminPanel = () => {
           {/* Action Buttons */}
           <div className="flex justify-between pt-4">
             <Link
-              href="/list"
+              href="/chatbots"
               className="flex items-center gap-2 px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />

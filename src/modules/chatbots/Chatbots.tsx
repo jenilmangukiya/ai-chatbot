@@ -55,24 +55,6 @@ export default function ChatbotList() {
     fetchChatbots();
   };
 
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard
-      .writeText(code)
-      .then(() => {
-        toast({
-          title: "Copied to clipboard!",
-        });
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-
-        toast({
-          variant: "destructive",
-          title: "Failed to copy to clipboard",
-        });
-      });
-  };
-
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this chatbot?")) return;
 
@@ -129,12 +111,12 @@ export default function ChatbotList() {
 
       {/* Chatbot Cards */}
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6">
-        {chatbots.map((bot) => (
+        {chatbots.map((bot, index) => (
           <ItemList
             bot={bot}
-            handleCopyCode={handleCopyCode}
             handleDelete={handleDelete}
             key={bot.id}
+            index={index}
           />
         ))}
       </div>

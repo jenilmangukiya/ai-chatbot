@@ -34,7 +34,9 @@ export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
       }
 
       try {
-        const response = await fetch(`/api/chatbot/${chatbotId}`);
+        const response = await fetch(`/api/chatbot/${chatbotId}`, {
+          cache: "no-store",
+        });
         if (response.ok) {
           const data = await response.json();
 
@@ -130,13 +132,19 @@ export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
       setIsLoading(false);
     }
   };
-  if (document) document.body.style.backgroundColor = "transparent";
+  useEffect(() => {
+    document.body.style.backgroundColor = "transparent";
+    document.body.style.pointerEvents = "none";
+  }, []);
   if (!config) return null;
   return (
-    <div className="fixed bottom-4 right-4 z-50 ">
+    <div className="fixed bottom-4 right-4 z-50 pointer-events-auto">
       {!isOpen && (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true);
+            window.parent.postMessage({ action: "expandChat" }, "*");
+          }}
           className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
           style={{ backgroundColor: config.themeConfig.backgroundColor }}
         >
@@ -173,7 +181,10 @@ export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
               <h3 className="font-medium text-white">{config.name}</h3>
             </div>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                window.parent.postMessage({ action: "collapseChat" }, "*");
+              }}
               className="text-white hover:opacity-75"
             >
               <X className="w-5 h-5" />
