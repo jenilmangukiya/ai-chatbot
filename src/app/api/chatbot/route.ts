@@ -3,6 +3,11 @@ import { prismaClient } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
+import cloudinary from "@/lib/cloudinary";
+import { unlink, writeFile } from "fs/promises";
+import { join } from "path";
+import path from "path";
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
@@ -17,17 +22,50 @@ export async function POST(req: NextRequest) {
     const knowledge = formData.get("knowledge") as string;
     const starterMessage = formData.get("starterMessage") as string;
     const openAiApiKey = formData.get("openAiApiKey") as string;
-    const botLogo = formData.get("botLogo") as string; // Expecting URL
+    const file = formData.get("botLogo") as File; // Expecting URL
     const themeConfig = formData.get("themeConfig"); // JSON string
 
-    console.log({
-      name,
-      knowledge,
-      starterMessage,
-      openAiApiKey,
-      botLogo,
-      themeConfig,
-    });
+    if (!file) {
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    }
+
+    // Convert File to Buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Create unique filename to avoid conflicts
+    const uniqueFilename = `${Date.now()}-${file.name}`;
+
+    // Get the project root directory
+    const projectRoot = process.cwd();
+
+    // Create path to public/tmp directory
+    const tmpPath = join(projectRoot, "public", "tmp", uniqueFilename);
+
+    // Ensure the file extension is safe
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+    const fileExtension = path.extname(file.name).toLowerCase();
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
+    }
+
+    // Save to public/tmp
+    await writeFile(tmpPath, buffer);
+    let result = null;
+    try {
+      // Upload to Cloudinary
+      result = await cloudinary.uploader.upload(tmpPath, {
+        folder: "smartsage",
+      });
+
+      // Delete temp file after upload
+      await unlink(tmpPath);
+    } catch (error) {
+      // Clean up temp file if upload fails
+      await unlink(tmpPath);
+      throw error;
+    }
 
     if (!name || !knowledge || !starterMessage || !openAiApiKey) {
       return NextResponse.json(
@@ -57,7 +95,7 @@ export async function POST(req: NextRequest) {
         knowledge,
         starterMessage,
         openAiApiKey,
-        botLogo: "botLogo",
+        botLogo: result ? result?.secure_url || "" : "",
         themeConfig: parsedThemeConfig,
         user: { connect: { email: session.user.email! } },
       },
