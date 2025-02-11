@@ -11,7 +11,7 @@ interface ChatbotProps {
   chatbotId: string;
 }
 
-export const Bot: React.FC<ChatbotProps> = ({ chatbotId }) => {
+export const EmbededBot: React.FC<ChatbotProps> = ({ chatbotId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");

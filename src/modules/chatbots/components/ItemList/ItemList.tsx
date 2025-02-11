@@ -23,7 +23,7 @@ const ItemList = ({
   index: number;
 }) => {
   const router = useRouter();
-  const embedCode = `<iframe src="${window.location.origin}/bot/${bot.id}" style="width: 100%; height: 600px; border: none; position: sticky; bottom: 0; z-index: 50;"></iframe>`;
+  const embedCode = `<iframe src="${window.location.origin}/embeded/${bot.id}" style="width: 100%; height: 600px; border: none; position: sticky; bottom: 0; z-index: 50;"></iframe>`;
   const [copied, setCopied] = useState(false);
 
   const CopyCode = (code: string) => {

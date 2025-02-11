@@ -1,9 +1,9 @@
-import { Bot } from "@/modules/bot/Bot/Bot";
+import { EmbededBot } from "@/modules/embeded/EmbededBot/EmbededBot";
 import React from "react";
 
 const page = async ({ params }: { params: Promise<{ chatbotId: string }> }) => {
   const { chatbotId } = await params;
-  return <Bot chatbotId={chatbotId} />;
+  return <EmbededBot chatbotId={chatbotId} />;
 };
 
 export default page;

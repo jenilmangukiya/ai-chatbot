@@ -50,7 +50,7 @@ function RecipySharingApp({ chatbotId }: { chatbotId: string }) {
       style={{ backgroundColor: colors.background }}
     >
       <iframe
-        src={`/bot/${chatbotId}`}
+        src={`/embeded/${chatbotId}`}
         ref={chatFrameRef}
         id="chatFrame"
         allowFullScreen

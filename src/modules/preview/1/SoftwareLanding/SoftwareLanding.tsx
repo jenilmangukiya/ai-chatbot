@@ -48,7 +48,7 @@ export default function SoftwareLanding({ chatbotId }: { chatbotId: string }) {
       style={{ backgroundColor: colors.background, color: colors.text }}
     >
       <iframe
-        src={`/bot/${chatbotId}`}
+        src={`/embeded/${chatbotId}`}
         ref={chatFrameRef}
         id="chatFrame"
         allowFullScreen

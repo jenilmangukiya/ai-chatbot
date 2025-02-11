@@ -1,4 +1,3 @@
-"use client";
 import ProtectedRoute from "@/components/Auth/ProtectedRoute/ProtectedRoute";
 import ChatbotList from "@/modules/chatbots/Chatbots";
 
