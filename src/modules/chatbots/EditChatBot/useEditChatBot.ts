@@ -112,7 +112,7 @@ const useEditChatBot = ({ chatbotId }: { chatbotId: string }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setLink(`${window.location.origin}/chatbot/${data.chatbot.id}`);
+        setLink(`${window.location.origin}/embeded/${data.chatbot.id}`);
         toast({ title: "Chatbot updated successfully" });
       } else {
         toast({ title: "Failed to update chatbot" });
