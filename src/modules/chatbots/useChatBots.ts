@@ -21,7 +21,7 @@ const useChatBots = () => {
     setError(null);
     try {
       const res = await fetch(
-        `/api/chatbot?page=${page}&limit=5&search=${search}`
+        `/api/chatbot?page=${page}&limit=3&search=${search}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch chatbots");
