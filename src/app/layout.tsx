@@ -15,8 +15,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SmartSage",
+  title: "SmartSage - Your Website’s AI Knowledge Expert.",
   description: "Knowlagable AI bot with custom knowledge base",
+  icons: {
+    icon: [
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/white-logo.png",
+        href: "/white-logo.png",
+      },
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/dark-logo.png",
+        href: "/dark-logo.png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

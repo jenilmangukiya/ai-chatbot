@@ -28,15 +28,18 @@ export default function SignInPage() {
     setError(null);
 
     const res = await signIn("credentials", {
-      redirect: true,
-      callbackUrl: `${window.location.origin}/chatbots`,
+      redirect: false,
       email,
       password,
     });
 
     setIsLoading(false);
     if (res?.error) {
-      setError(res.error);
+      if (res?.error === "CredentialsSignin")
+        setError("Please enter valid email and password");
+      else setError("Something went wrong please try again");
+    } else if (res?.ok) {
+      router.push("/chatbots");
     }
   };
 
