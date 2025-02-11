@@ -4,7 +4,7 @@ import SoftwareLanding from "@/modules/preview/1/SoftwareLanding/SoftwareLanding
 async function SoftwareLandingPage({
   params,
 }: {
-  params: { chatbotId: string };
+  params: Promise<{ chatbotId: string }>;
 }) {
   const { chatbotId } = await params;
   return (

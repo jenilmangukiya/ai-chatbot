@@ -4,7 +4,7 @@ import RecipySharingApp from "@/modules/preview/2/RecipySharingApp/RecipySharing
 async function RecipySharingAppPage({
   params,
 }: {
-  params: { chatbotId: string };
+  params: Promise<{ chatbotId: string }>;
 }) {
   const { chatbotId } = await params;
   return (
