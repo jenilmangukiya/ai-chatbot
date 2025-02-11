@@ -1,9 +1,6 @@
 import { prismaClient } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary, { getPublicIdFromUrl } from "@/lib/cloudinary";
-import { unlink, writeFile } from "fs/promises";
-import { join } from "path";
-import path from "path";
 
 export async function GET(
   req: NextRequest,
@@ -78,40 +75,15 @@ export async function PATCH(
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      // Create unique filename to avoid conflicts
-      const uniqueFilename = `${Date.now()}-${file.name}`;
-
-      // Get the project root directory
-      const projectRoot = process.cwd();
-
-      // Create path to public/tmp directory
-      const tmpPath = join(projectRoot, "public", "tmp", uniqueFilename);
-
-      // Ensure the file extension is safe
-      const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
-      const fileExtension = path.extname(file.name).toLowerCase();
-
-      if (!allowedExtensions.includes(fileExtension)) {
-        return NextResponse.json(
-          { error: "Invalid file type" },
-          { status: 400 }
-        );
-      }
-
-      // Save to public/tmp
-      await writeFile(tmpPath, buffer);
-
       try {
+        const base64File = `data:${file.type};base64,${buffer.toString(
+          "base64"
+        )}`;
         // Upload to Cloudinary
-        result = await cloudinary.uploader.upload(tmpPath, {
+        result = await cloudinary.uploader.upload(base64File, {
           folder: "smartsage",
         });
-
-        // Delete temp file after upload
-        await unlink(tmpPath);
       } catch (error) {
-        // Clean up temp file if upload fails
-        await unlink(tmpPath);
         throw error;
       }
     }
